@@ -22,24 +22,55 @@ A simple minigame using the Minigames API.
 ### Main.java
 
 ```java
+package com.hero.minigames.hotpotato;
+
 import com.hero.minigames.Main;
 import com.hero.minigames.Arena;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class Main extends JavaPlugin {
+public class Main extends JavaPlugin implements CommandExecutor {
 
     private Minigame hotPotatoMinigame;
+    private Arena arena;
 
     @Override
     public void onEnable() {
         hotPotatoMinigame = new Minigame("Hot Potato");
         
-        Arena arena = new Arena(new HotPotatoGame(hotPotatoMinigame), "Hot Potato Arena", "HotPotato", 2, 10, 0, this);
+        arena = new Arena(new HotPotatoGame(hotPotatoMinigame), "Hot Potato Arena", "HotPotato", 2, 10, 0, this);
         // Note: Setup the arena boundaries, teams, etc. here
         
         hotPotatoMinigame.addArena(arena);
         
+        // Registering commands
+        this.getCommand("joinhotpotato").setExecutor(this);
+        this.getCommand("leavehotpotato").setExecutor(this);
+
         System.out.println("Hot Potato Minigame is now enabled!");
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage("Only players can execute this command!");
+            return true;
+        }
+
+        Player player = (Player) sender;
+
+        if (cmd.getName().equalsIgnoreCase("joinhotpotato")) {
+            arena.addPlayer(player);
+            player.sendMessage("You have joined the Hot Potato game!");
+        } else if (cmd.getName().equalsIgnoreCase("leavehotpotato")) {
+            arena.removePlayer(player);
+            player.sendMessage("You have left the Hot Potato game!");
+        }
+
+        return true;
     }
 }
 ```
