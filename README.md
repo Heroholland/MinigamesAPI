@@ -19,7 +19,7 @@ A simple minigame using the Minigames API.
 
 ### Code Implementation
 
-###Main.java
+### Main.java
 
 ```java
 import com.hero.minigames.Main;
@@ -41,9 +41,10 @@ public class Main extends JavaPlugin {
         
         System.out.println("Hot Potato Minigame is now enabled!");
     }
-}```
+}
+```
 
-###HotPotatoGame.java
+### HotPotatoGame.java
 
 ```java
 import com.hero.minigames.Arena;
