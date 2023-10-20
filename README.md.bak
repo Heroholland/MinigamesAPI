@@ -1,5 +1,5 @@
-#**MinigamesAPI**
-##A hugely helpful and easy to use library for efficiently crafting Minecraft Spigot minigames with minimal effort.
+#MinigamesAPI
+## A hugely helpful and easy to use library for efficiently crafting Minecraft Spigot minigames with minimal effort.
 
 # Sample Minigame:
 
@@ -21,8 +21,6 @@ A simple minigame using the Minigames API.
 ###Main.java
 
 ```java
-package com.hero.minigames.hotpotato;
-
 import com.hero.minigames.Main;
 import com.hero.minigames.Arena;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -47,8 +45,6 @@ public class Main extends JavaPlugin {
 ###HotPotatoGame.java
 
 ```java
-	package com.hero.minigames.hotpotato;
-
 import com.hero.minigames.Arena;
 import com.hero.minigames.events.GameStartEvent;
 import com.hero.minigames.events.GameUpdateEvent;
