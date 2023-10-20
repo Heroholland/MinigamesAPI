@@ -1,0 +1,7 @@
+name: MinigamesAPI
+main: com.hero.minigames.Main
+version: 1.0
+description: Allows for minigames to easily be created.
+author: Heroholland
+api-version: 1.19
+commands:
