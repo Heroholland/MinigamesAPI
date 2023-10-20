@@ -5,7 +5,7 @@ import com.hero.minigames.Minigame;
 
 public class GameEndEvent {
 
-private Arena arena;
+	private Arena arena;
 	
 	public GameEndEvent(Arena arena) {
 		this.arena = arena;

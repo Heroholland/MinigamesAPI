@@ -14,6 +14,7 @@ import com.hero.minigames.events.CustomEvent;
 import com.hero.minigames.events.GameEndEvent;
 import com.hero.minigames.events.GameStartEvent;
 import com.hero.minigames.events.GameUpdateEvent;
+import com.hero.minigames.events.PlayerEnterEvent;
 import com.hero.minigames.events.TimerSecondEvent;
 
 public class EventManager {
@@ -31,6 +32,10 @@ public class EventManager {
 	}
 	
 	public void timelineUpdate(GameUpdateEvent e) {
+		
+	}
+	
+	public void playerEnter(PlayerEnterEvent e) {
 		
 	}
 	

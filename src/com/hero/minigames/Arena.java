@@ -12,6 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.hero.minigames.events.GameEndEvent;
 import com.hero.minigames.events.GameStartEvent;
+import com.hero.minigames.events.PlayerEnterEvent;
 
 public class Arena {
 	private Map<String, Team> teams;
@@ -269,6 +270,11 @@ public class Arena {
 	
 	public void removePlayer(Player player) {
 		this.players.removeMember(player);
+	}
+	
+	public void addPlayer(Player player) {
+		this.players.addMember(player);
+		this.getEventManager().playerEnter(new PlayerEnterEvent(this, player));
 	}
 	
 	public EventManager getEventManager() {
