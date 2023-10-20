@@ -23,6 +23,10 @@ public class Arena {
 	private EventManager eManager;
 	private List<Block> blocksChanged;
 	private JavaPlugin plugin;
+	private Location arenaMin, arenaMax;
+	private Map<Player, Integer> deaths;
+	private HashMap<Player, Kit> kits;
+	private Map<String, List<Player>> teamQueue;
 	
 	public Arena(EventManager eManager, String title, String chatPrefix, int minPlayers, int maxPlayers, int gamemode, JavaPlugin plugin) {
 		this.eManager = eManager;
@@ -37,6 +41,9 @@ public class Arena {
 		this.blocksChanged = new ArrayList<Block>();
 		this.plugin = plugin;
 		this.timer = new Timer(this);
+		this.kits = new HashMap<Player, Kit>();
+		this.deaths = new HashMap<Player, Integer>();
+		this.teamQueue = new HashMap<>();
 		this.plugin.getServer().getPluginManager().registerEvents(new EventListener(this.plugin, this), this.plugin);
 	}
 	
@@ -71,6 +78,14 @@ public class Arena {
 		}
 	}
 	
+	public void AnnounceAllExcept(String message, Player exception) {
+		for (Player player : this.players.getMembers()) {
+			if (player != exception) {
+				player.sendMessage(message);
+			}
+		}
+	}
+	
 	public void teleportTeam(String team, Location location) {
 		Team t = teams.get(team);
 		for (Player p : t.getMembers()) {
@@ -84,6 +99,142 @@ public class Arena {
 		}
 	}
 	
+	public void shuffleTeams() {
+        for (Map.Entry<String, List<Player>> entry : teamQueue.entrySet()) {
+            String teamName = entry.getKey();
+            List<Player> queuedPlayers = entry.getValue();
+
+            Team team = teams.get(teamName);
+            for (Player player : queuedPlayers) {
+                team.addMember(player);
+                players.removeMember(player);
+            }
+        }
+        teamQueue.clear();
+
+        while (!players.getMembers().isEmpty()) {
+            Player player = players.getMembers().get(0);
+
+            Team leastFilledTeam = null;
+            int minSize = Integer.MAX_VALUE;
+            for (Team t : teams.values()) {
+                if (t.getMembers().size() < minSize) {
+                    minSize = t.getMembers().size();
+                    leastFilledTeam = t;
+                }
+            }
+
+            if (leastFilledTeam != null) {
+                leastFilledTeam.addMember(player);
+                players.removeMember(player);
+            }
+        }
+    }
+	
+	public void addToTeamQueue(Player player, String teamName) {
+        teamQueue.putIfAbsent(teamName, new ArrayList<>());
+        teamQueue.get(teamName).add(player);
+    }
+	
+	public void removeFromTeamQueue(Player player, String teamName) {
+        if (teamQueue.containsKey(teamName)) {
+            teamQueue.get(teamName).remove(player);
+        }
+    }
+	
+	 public List<Player> getTeamQueue(String teamName) {
+        return teamQueue.getOrDefault(teamName, new ArrayList<>());
+	 }
+	
+	public Map<Player, Integer> getDeaths() {
+		return deaths;
+	}
+
+	public void setDeaths(Map<Player, Integer> deaths) {
+		this.deaths = deaths;
+	}
+
+	public Team getPlayersTeam(Player player) {
+		for (Team t : this.teams.values()) {
+			if (t.getMembers().contains(player)) {
+				return t;
+			}
+		}
+		return null;
+	}
+	
+	public int getPlayersDeaths(Player player) {
+		if (this.deaths.containsKey(player)) {
+			return this.deaths.get(player);
+		}
+		return 0;
+	}
+	
+	public void setPlayersDeaths(Player player, int amount) {
+		if (this.deaths.containsKey(player)) {
+			this.deaths.put(player, amount);
+		}
+	}
+	
+	public void setPlayersKit(Player player, Kit kit) {
+		if (kits.containsKey(player)) {
+			removePlayersKit(player, kit);
+		}
+		kits.putIfAbsent(player, kit);
+	}
+	
+	public void removePlayersKit(Player player, Kit kit) {
+		if (kits.containsKey(player)) {
+			kits.remove(player);
+		}
+	}
+	
+	public void addPlayerDeaths(Player player) {
+		if (this.deaths.containsKey(player)) {
+			this.deaths.put(player, this.getDeaths().get(player) + 1);
+		} else {
+			this.deaths.put(player, 1);
+		}
+	}
+	
+	public String getPlayersKitTitle(Player player) {
+		if (this.getKits().containsKey(player)) {
+			return this.getKits().get(player).getClass().getSimpleName();
+		}
+		return "";
+	}
+	
+	public Kit getPlayersKit(Player player) {
+		if (this.getKits().containsKey(player)) {
+			return this.getKits().get(player);
+		}
+		return null;
+	}
+	
+	public Location getArenaMin() {
+		return arenaMin;
+	}
+
+	public void setArenaMin(Location arenaMin) {
+		this.arenaMin = arenaMin;
+	}
+
+	public Location getArenaMax() {
+		return arenaMax;
+	}
+
+	public void setArenaMax(Location arenaMax) {
+		this.arenaMax = arenaMax;
+	}
+
+	public HashMap<Player, Kit> getKits() {
+		return kits;
+	}
+
+	public void setKits(HashMap<Player, Kit> kits) {
+		this.kits = kits;
+	}
+
 	public List<Block> getBlocksChanged() {
 		return blocksChanged;
 	}
