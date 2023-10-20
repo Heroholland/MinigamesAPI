@@ -16,10 +16,12 @@ import com.hero.minigames.events.GameStartEvent;
 public class Minigame {
 	
 	private List<Arena> arenas;
+	private EventManager eventManager;
 	private String title, prefix;
 	
 	public Minigame(String title) {
 		this.title = title;
+		this.eventManager = new EventManager();
 		this.arenas = new ArrayList<Arena>();
 	}
 
@@ -66,6 +68,14 @@ public class Minigame {
 
 	public void setPrefix(String prefix) {
 		this.prefix = prefix;
+	}
+
+	public EventManager getEventManager() {
+		return eventManager;
+	}
+
+	public void setEventManager(EventManager eventManager) {
+		this.eventManager = eventManager;
 	}
 	
 }
